@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ayo Belajar 4 Kata Ajaib - TK AL-ULUM</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Google (Fredoka & Quicksand) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700;800&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Canvas Confetti for Celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'kid-green': '#10B981',
+            'kid-blue': '#0284C7',
+            'kid-sky': '#38BDF8',
+            'kid-yellow': '#F59E0B',
+            'kid-orange': '#F97316',
+            'kid-pink': '#EC4899',
+            'kid-purple': '#8B5CF6',
+            'kid-bg': '#F0FDFA'
+          },
+          fontFamily: {
+            fredoka: ['Fredoka', 'sans-serif'],
+            quicksand: ['Quicksand', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Fredoka', cursive, sans-serif;
+      background-color: #F0FDFA;
+      background-image: radial-gradient(#38BDF8 1.5px, transparent 1.5px), radial-gradient(#38BDF8 1.5px, #F0FDFA 1.5px);
+      background-size: 50px 50px;
+      background-position: 0 0, 25px 25px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #E0F2FE;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #38BDF8;
+      border-radius: 10px;
+    }
+
+    /* Animations */
+    .bounce-gentle {
+      animation: bounceGentle 2s infinite ease-in-out;
+    }
+    @keyframes bounceGentle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .pulse-glow {
+      animation: pulseGlow 1.5s infinite alternate;
+    }
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 10px rgba(14, 165, 233, 0.4); }
+      100% { box-shadow: 0 0 25px rgba(14, 165, 233, 0.9); }
+    }
+
+    .btn-kid {
+      transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .btn-kid:active {
+      transform: scale(0.92);
+    }
+
+    /* Drag and Drop Visual Feedback */
+    .draggable-item {
+      touch-action: none;
+      cursor: grab;
+    }
+    .draggable-item:active {
+      cursor: grabbing;
+    }
+    .drop-zone.over {
+      border-color: #0284C7;
+      background-color: #E0F2FE;
+      transform: scale(1.03);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-slate-800 overflow-x-hidden">
+
+  <!-- ================= TOP HEADER / NAVBAR ================= -->
+  <header class="bg-white/90 backdrop-blur-md border-b-4 border-sky-400 sticky top-0 z-50 px-4 py-2 shadow-md">
+    <div class="max-w-6xl mx-auto flex justify-between items-center">
+      <!-- Logo & Header Title -->
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="showScreen('home-screen')">
+        <div class="w-12 h-12 bg-sky-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-md border-2 border-sky-300 transform -rotate-3">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-bold text-sky-600 leading-none">TK AL-ULUM</h1>
+          <p class="text-xs text-amber-500 font-semibold tracking-wide">Belajar 4 Kata Ajaib • Media Anak PAUD/TK</p>
+        </div>
+      </div>
+
+      <!-- Quick Controls (Gender Selector, Audio, Stars Counter, Home) -->
+      <div class="flex items-center space-x-2 md:space-x-3">
+        <!-- Gender Switcher -->
+        <div class="bg-sky-50 border-2 border-sky-300 rounded-2xl p-1 flex items-center gap-1 shadow-sm">
+          <button id="btn-gender-boy" onclick="setGender('boy')" class="px-2.5 py-1 rounded-xl font-bold text-xs flex items-center gap-1 bg-sky-500 text-white shadow">
+            <i class="fa-solid fa-child"></i> <span class="hidden md:inline">Laki-laki</span>
+          </button>
+          <button id="btn-gender-girl" onclick="setGender('girl')" class="px-2.5 py-1 rounded-xl font-bold text-xs flex items-center gap-1 text-sky-700 hover:bg-sky-100">
+            <i class="fa-solid fa-child-dress"></i> <span class="hidden md:inline">Perempuan</span>
+          </button>
+        </div>
+
+        <!-- Total Stars Display -->
+        <div class="bg-amber-100 border-2 border-amber-400 px-3 py-1 rounded-full flex items-center space-x-1 shadow-sm">
+          <i class="fa-solid fa-star text-amber-500 text-lg bounce-gentle"></i>
+          <span id="global-stars" class="font-bold text-amber-700 text-lg">0</span>
+        </div>
+
+        <!-- BGM Toggle Button -->
+        <button id="bgm-toggle" onclick="toggleBGM()" class="btn-kid bg-sky-100 text-sky-700 p-2.5 rounded-2xl border-2 border-sky-300 hover:bg-sky-200" title="Musik Latar">
+          <i class="fa-solid fa-music text-lg"></i>
+        </button>
+
+        <!-- Home Button -->
+        <button onclick="showScreen('home-screen')" class="btn-kid bg-emerald-500 text-white px-3 py-2 rounded-2xl border-b-4 border-emerald-700 hover:bg-emerald-600 flex items-center gap-1 font-bold">
+          <i class="fa-solid fa-house"></i>
+          <span class="hidden sm:inline">Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MAIN CONTENT CONTAINER ================= -->
+  <main class="max-w-6xl mx-auto w-full px-4 py-4 flex-grow flex flex-col justify-center">
+
+    <!-- ---------------- SECTION B: HALAMAN PEMBUKA (HOME SCREEN) ---------------- -->
+    <section id="home-screen" class="flex flex-col items-center text-center py-4">
+      <!-- Welcome Banner -->
+      <div class="relative w-full max-w-2xl bg-gradient-to-b from-sky-300 via-amber-100 to-sky-100 rounded-3xl p-6 border-4 border-white shadow-xl overflow-hidden mb-6">
+        <!-- Decorative Background -->
+        <div class="absolute top-2 left-4 text-white opacity-80 animate-pulse text-2xl"><i class="fa-solid fa-cloud"></i></div>
+        <div class="absolute top-6 right-8 text-amber-400 text-3xl animate-spin" style="animation-duration: 10s;"><i class="fa-solid fa-star"></i></div>
+        <div class="absolute top-3 right-20 text-sky-400 text-2xl"><i class="fa-solid fa-heart"></i></div>
+
+        <!-- Main Title Header -->
+        <div class="relative z-10">
+          <span class="bg-amber-400 text-amber-950 font-bold px-4 py-1.5 rounded-full text-sm md:text-base border-2 border-amber-200 inline-block mb-2 shadow-sm">
+            ✨ Media Pembelajaran Interaktif PAUD/TK ✨
+          </span>
+          <h2 class="text-3xl md:text-5xl font-extrabold text-sky-800 drop-shadow-md mb-1">
+            BELAJAR 4 KATA AJAIB
+          </h2>
+          <p class="text-lg md:text-xl font-bold text-amber-700 mb-4">
+            "Maaf • Tolong • Terima Kasih • Permisi 🌟"
+          </p>
+
+          <!-- SVG Mascot Kid Display -->
+          <div id="home-mascot-container" class="w-48 h-48 mx-auto my-2 drop-shadow-lg">
+            <!-- Dynamic SVG inserted via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Start Call To Action -->
+      <button onclick="startLearning()" class="btn-kid pulse-glow bg-gradient-to-r from-sky-500 to-teal-400 text-white text-2xl md:text-3xl font-extrabold px-10 py-4 rounded-3xl border-b-8 border-sky-700 shadow-2xl flex items-center space-x-3 hover:brightness-110 mb-8">
+        <i class="fa-solid fa-circle-play text-amber-300 text-4xl"></i>
+        <span>MULAI BELAJAR</span>
+      </button>
+
+      <!-- Main Menu Buttons Grid -->
+      <div id="main-menu-grid" class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 w-full max-w-4xl">
+        <!-- Menu 1 -->
+        <button onclick="showScreen('menu-mengenal')" class="btn-kid bg-white p-4 rounded-3xl border-4 border-sky-300 shadow-lg hover:border-sky-500 flex flex-col items-center group">
+          <div class="w-16 h-16 bg-sky-100 rounded-2xl flex items-center justify-center text-sky-600 text-3xl mb-2 group-hover:scale-110 transition">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+          </div>
+          <span class="font-bold text-slate-700 text-sm md:text-base">Mengenal Kata</span>
+        </button>
+
+        <!-- Menu 2 -->
+        <button onclick="showScreen('menu-menyusun')" class="btn-kid bg-white p-4 rounded-3xl border-4 border-amber-300 shadow-lg hover:border-amber-500 flex flex-col items-center group">
+          <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-500 text-3xl mb-2 group-hover:scale-110 transition">
+            <i class="fa-solid fa-puzzle-piece"></i>
+          </div>
+          <span class="font-bold text-slate-700 text-sm md:text-base">Lengkapi Kata</span>
+        </button>
+
+        <!-- Menu 3 -->
+        <button onclick="showScreen('menu-simulasi')" class="btn-kid bg-white p-4 rounded-3xl border-4 border-purple-300 shadow-lg hover:border-purple-500 flex flex-col items-center group">
+          <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-600 text-3xl mb-2 group-hover:scale-110 transition">
+            <i class="fa-solid fa-comments"></i>
+          </div>
+          <span class="font-bold text-slate-700 text-sm md:text-base">Simulasi Cerita</span>
+        </button>
+
+        <!-- Menu 4 -->
+        <button onclick="showScreen('menu-kuis')" class="btn-kid bg-white p-4 rounded-3xl border-4 border-emerald-300 shadow-lg hover:border-emerald-500 flex flex-col items-center group">
+          <div class="w-16 h-16 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-500 text-3xl mb-2 group-hover:scale-110 transition">
+            <i class="fa-solid fa-gamepad"></i>
+          </div>
+          <span class="font-bold text-slate-700 text-sm md:text-base">Kuis Ajaib</span>
+        </button>
+
+        <!-- Menu 5 -->
+        <button onclick="showScreen('menu-evaluasi')" class="btn-kid bg-white p-4 rounded-3xl border-4 border-rose-300 shadow-lg hover:border-rose-500 flex flex-col items-center group col-span-2 md:col-span-1">
+          <div class="w-16 h-16 bg-rose-100 rounded-2xl flex items-center justify-center text-rose-500 text-3xl mb-2 group-hover:scale-110 transition">
+            <i class="fa-solid fa-trophy"></i>
+          </div>
+          <span class="font-bold text-slate-700 text-sm md:text-base">Hasil Belajar</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ---------------- SECTION C1: MENGENAL 4 KATA AJAIB ---------------- -->
+    <section id="menu-mengenal" class="hidden flex-col items-center">
+      <!-- Top Title Bar -->
+      <div class="w-full flex justify-between items-center mb-4">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-sky-700 flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-amber-500"></i> Mengenal 4 Kata Ajaib
+        </h2>
+        <span id="kata-counter" class="bg-sky-100 text-sky-800 font-bold px-3 py-1 rounded-full text-sm">1 / 4</span>
+      </div>
+
+      <!-- Main Card Display -->
+      <div class="w-full bg-white rounded-3xl border-4 border-sky-300 p-4 md:p-6 shadow-xl flex flex-col md:flex-row items-center gap-6">
+        <!-- SVG Canvas Graphic Container -->
+        <div class="w-full md:w-1/2 flex flex-col items-center justify-center bg-sky-50 rounded-2xl p-4 border-2 border-sky-200">
+          <div id="mengenal-svg-holder" class="w-56 h-56 flex items-center justify-center">
+            <!-- Dynamic SVG inserted by JS -->
+          </div>
+          <span id="mengenal-badge" class="mt-2 bg-amber-400 text-amber-950 font-black text-2xl px-6 py-1.5 rounded-full shadow border-2 border-amber-200">
+            MAAF
+          </span>
+        </div>
+
+        <!-- Situations & Narrative Panel -->
+        <div class="w-full md:w-1/2 flex flex-col space-y-3">
+          <div class="bg-amber-50 border-2 border-amber-300 p-4 rounded-2xl">
+            <p class="text-xs font-bold text-amber-700 uppercase tracking-wider mb-1">Kapan Kita Mengucapkannya?</p>
+            <p id="mengenal-situasi" class="text-lg font-bold text-slate-800"></p>
+          </div>
+
+          <div class="bg-sky-50 border-2 border-sky-200 p-3 rounded-2xl">
+            <p class="text-xs font-bold text-sky-700 uppercase">Contoh Kalimat:</p>
+            <p id="mengenal-contoh" class="text-base font-semibold text-sky-900 italic"></p>
+          </div>
+
+          <div class="bg-emerald-50 border-2 border-emerald-200 p-3 rounded-2xl">
+            <p class="text-xs font-bold text-emerald-700 uppercase">Manfaat Kata Ajaib Ini:</p>
+            <p id="mengenal-manfaat" class="text-sm font-semibold text-emerald-900"></p>
+          </div>
+
+          <!-- Voice Control Buttons -->
+          <div class="flex items-center space-x-3 pt-2">
+            <button onclick="playCurrentKataAudio()" class="btn-kid flex-1 bg-amber-400 text-amber-950 font-extrabold py-3 px-4 rounded-2xl border-b-4 border-amber-600 hover:bg-amber-300 flex items-center justify-center gap-2 shadow-md">
+              <i class="fa-solid fa-volume-high text-xl"></i>
+              <span>Dengar Penjelasan</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Control Buttons -->
+      <div class="flex justify-between w-full mt-6">
+        <button onclick="prevKata()" class="btn-kid bg-slate-200 text-slate-700 font-bold px-6 py-3 rounded-2xl border-b-4 border-slate-400 hover:bg-slate-300 flex items-center gap-2">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Sebelumnya</span>
+        </button>
+        <button onclick="nextKata()" class="btn-kid bg-sky-500 text-white font-extrabold px-8 py-3 rounded-2xl border-b-4 border-sky-700 hover:bg-sky-600 flex items-center gap-2 shadow-lg">
+          <span>Lanjut</span>
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ---------------- SECTION C2: MENYUSUN & MELENGKAPI KATA ---------------- -->
+    <section id="menu-menyusun" class="hidden flex-col items-center">
+      <div class="w-full text-center mb-4">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-amber-700 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-puzzle-piece text-amber-500"></i> Lengkapi Kalimat Ajaib
+        </h2>
+        <p class="text-sm md:text-base font-semibold text-slate-600">
+          Pilih kata ajaib yang paling tepat untuk melengkapi situasi cerita di bawah ini!
+        </p>
+      </div>
+
+      <!-- Situation Display Banner -->
+      <div class="w-full max-w-2xl bg-white rounded-3xl border-4 border-amber-300 p-5 shadow-xl flex flex-col items-center mb-6 text-center">
+        <div id="menyusun-svg" class="w-40 h-40 mb-3"></div>
+        <div class="bg-amber-50 border-2 border-amber-200 rounded-2xl p-4 w-full mb-3">
+          <p id="menyusun-soal-text" class="text-lg md:text-xl font-bold text-slate-800">
+            "_____, bisakah bantu saya mengambilkan mainan di atas meja?"
+          </p>
+        </div>
+        <div id="menyusun-slot" class="w-full max-w-xs border-4 border-dashed border-amber-400 bg-amber-100 rounded-2xl py-3 text-amber-900 font-black text-xl flex items-center justify-center min-h-[56px]">
+          [ Tekan Kata di Bawah ]
+        </div>
+      </div>
+
+      <!-- Options Source Container -->
+      <div class="w-full max-w-2xl bg-sky-50 rounded-3xl border-4 border-sky-200 p-4">
+        <p class="text-center font-bold text-sky-800 text-sm mb-3">Pilihan Kata Ajaib:</p>
+        <div id="menyusun-options-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Dynamically populated buttons -->
+        </div>
+      </div>
+
+      <!-- Check Order Status & Actions -->
+      <div class="flex gap-4 mt-6">
+        <button onclick="resetMenyusunGame()" class="btn-kid bg-rose-100 text-rose-700 font-bold px-6 py-3 rounded-2xl border-2 border-rose-300 hover:bg-rose-200">
+          <i class="fa-solid fa-rotate-left"></i> Reset
+        </button>
+        <button onclick="checkMenyusunAnswer()" class="btn-kid bg-sky-500 text-white font-extrabold px-8 py-3 rounded-2xl border-b-4 border-sky-700 hover:bg-sky-600 text-lg shadow-lg">
+          <i class="fa-solid fa-circle-check"></i> Periksa Jawaban
+        </button>
+      </div>
+    </section>
+
+    <!-- ---------------- SECTION C3: SIMULASI & CERITA INTERAKTIF ---------------- -->
+    <section id="menu-simulasi" class="hidden flex-col items-center">
+      <div class="w-full text-center mb-4">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-purple-700 flex items-center justify-center gap-2">
+          <i class="fa-solid fa-comments text-amber-500"></i> Simulasi Cerita Sehari-Hari
+        </h2>
+        <p class="text-sm font-semibold text-slate-600">Perhatikan penerapan kata ajaib dalam kehidupan sehari-hari ya!</p>
+      </div>
+
+      <!-- Interactive Player Card -->
+      <div class="w-full max-w-2xl bg-white rounded-3xl border-4 border-purple-300 p-6 shadow-xl flex flex-col items-center text-center">
+        <!-- Character Avatar Player -->
+        <div class="w-full h-64 bg-gradient-to-b from-purple-100 to-indigo-50 rounded-2xl border-2 border-purple-200 flex items-center justify-center relative overflow-hidden mb-4">
+          <div id="simulasi-svg" class="w-48 h-48">
+            <!-- Animated SVG player -->
+          </div>
+          <!-- Indicator Step Badge -->
+          <span id="simulasi-step-badge" class="absolute top-3 left-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+            Skenario 1 dari 4
+          </span>
+        </div>
+
+        <h3 id="simulasi-title" class="text-2xl font-black text-purple-900 mb-1">Membantu Teman di Sekolah</h3>
+        <p id="simulasi-desc" class="text-base text-slate-700 mb-4 px-4 font-semibold">Saat meminta bantuan atau menerima pertolongan, gunakan kata TOLONG dan TERIMA KASIH.</p>
+
+        <!-- Player Controls -->
+        <div class="flex items-center space-x-3 w-full max-w-md">
+          <button onclick="simulasiPrev()" class="btn-kid bg-purple-100 text-purple-700 p-3 rounded-2xl border-2 border-purple-300 hover:bg-purple-200">
+            <i class="fa-solid fa-backward-step text-xl"></i>
+          </button>
+          <button id="simulasi-play-btn" onclick="toggleSimulasiAuto()" class="btn-kid flex-1 bg-purple-600 text-white font-extrabold py-3 px-4 rounded-2xl border-b-4 border-purple-800 hover:bg-purple-700 flex items-center justify-center gap-2 shadow-md">
+            <i id="simulasi-play-icon" class="fa-solid fa-play"></i>
+            <span id="simulasi-play-text">Putar Otomatis</span>
+          </button>
+          <button onclick="simulasiNext()" class="btn-kid bg-purple-100 text-purple-700 p-3 rounded-2xl border-2 border-purple-300 hover:bg-purple-200">
+            <i class="fa-solid fa-forward-step text-xl"></i>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------- SECTION C4: KUIS KATA AJAIB ---------------- -->
+    <section id="menu-kuis" class="hidden flex-col items-center">
+      <!-- Quiz Progress Top Bar -->
+      <div class="w-full max-w-2xl flex justify-between items-center mb-3">
+        <div class="flex items-center gap-2">
+          <span class="text-lg font-black text-emerald-700">Soal <span id="kuis-num">1</span>/10</span>
+        </div>
+        <div class="flex items-center gap-2 bg-amber-100 border border-amber-300 px-3 py-1 rounded-full">
+          <i class="fa-solid fa-star text-amber-500"></i>
+          <span id="kuis-stars-count" class="font-extrabold text-amber-800">0</span> Bintang
+        </div>
+      </div>
+
+      <!-- Question Box -->
+      <div class="w-full max-w-2xl bg-white rounded-3xl border-4 border-emerald-300 p-5 shadow-xl flex flex-col items-center">
+        <!-- Question Text -->
+        <div class="bg-emerald-50 w-full border-2 border-emerald-200 rounded-2xl p-4 text-center mb-4">
+          <h3 id="kuis-question-text" class="text-xl md:text-2xl font-black text-slate-800 leading-snug">
+            <!-- Question text -->
+          </h3>
+        </div>
+
+        <!-- Quiz Answer Options Grid -->
+        <div id="kuis-options-container" class="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+          <!-- Dynamic Answer Buttons -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ---------------- SECTION C5: EVALUASI KEMAMPUAN ---------------- -->
+    <section id="menu-evaluasi" class="hidden flex-col items-center">
+      <div class="w-full max-w-2xl bg-white rounded-3xl border-4 border-rose-300 p-6 shadow-xl text-center">
+        <!-- Evaluation Header -->
+        <div class="w-20 h-20 bg-amber-400 text-white text-4xl rounded-full flex items-center justify-center mx-auto mb-3 shadow-lg border-4 border-white bounce-gentle">
+          <i class="fa-solid fa-trophy"></i>
+        </div>
+
+        <h2 class="text-3xl font-black text-rose-700 mb-1">Hasil Belajar Kata Ajaib</h2>
+        <p class="text-sky-700 font-bold text-lg mb-1">TK AL-ULUM</p>
+        <p class="text-xs font-semibold text-slate-500 mb-6">Pengembang Media: <span class="font-bold text-amber-600">Tim Edukasi PAUD</span></p>
+
+        <!-- Stats Matrix Grid -->
+        <div class="grid grid-cols-2 gap-3 mb-6">
+          <div class="bg-amber-50 border-2 border-amber-300 p-3 rounded-2xl">
+            <span class="text-xs font-bold text-amber-700 uppercase">Total Bintang</span>
+            <p id="eval-total-stars" class="text-3xl font-black text-amber-600">0</p>
+          </div>
+          <div class="bg-sky-50 border-2 border-sky-300 p-3 rounded-2xl">
+            <span class="text-xs font-bold text-sky-700 uppercase">Skor Kuis</span>
+            <p id="eval-quiz-score" class="text-3xl font-black text-sky-600">0 / 100</p>
+          </div>
+          <div class="bg-emerald-50 border-2 border-emerald-300 p-3 rounded-2xl">
+            <span class="text-xs font-bold text-emerald-700 uppercase">Mengenal 4 Kata</span>
+            <p id="eval-mengenal-status" class="text-lg font-bold text-emerald-800">Sudah Dipelajari</p>
+          </div>
+          <div class="bg-purple-50 border-2 border-purple-300 p-3 rounded-2xl">
+            <span class="text-xs font-bold text-purple-700 uppercase">Lengkapi Kata</span>
+            <p id="eval-menyusun-status" class="text-lg font-bold text-purple-800">Selesai ✨</p>
+          </div>
+        </div>
+
+        <!-- Motivational Message -->
+        <div class="bg-rose-50 border-2 border-rose-200 p-4 rounded-2xl mb-6">
+          <p id="eval-motivasii" class="text-base font-bold text-rose-800">
+            "Hebat sekali! Kamu anak yang sopan, santun, dan hebat. Selalu gunakan 4 kata ajaib setiap hari ya! 🌟"
+          </p>
+        </div>
+
+        <!-- Reset / Restart Button -->
+        <button onclick="resetAllProgress()" class="btn-kid bg-rose-500 text-white font-extrabold px-8 py-3 rounded-2xl border-b-4 border-rose-700 hover:bg-rose-600 text-lg shadow-lg">
+          <i class="fa-solid fa-rotate"></i> Ulangi Belajar Dari Awal
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ================= AUDIO / DIALOG POPUP MODAL ================= -->
+  <div id="modal-feedback" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white border-4 border-amber-400 rounded-3xl p-6 max-w-sm w-full text-center shadow-2xl transform transition-all scale-100">
+      <div id="modal-icon" class="text-5xl mb-3">🎉</div>
+      <h3 id="modal-title" class="text-2xl font-black text-slate-800 mb-2">Hebat!</h3>
+      <p id="modal-message" class="text-slate-600 font-semibold mb-6">Kamu anak yang pintar dan santun!</p>
+      <button onclick="closeModal()" class="btn-kid bg-sky-500 text-white font-black px-6 py-2.5 rounded-2xl border-b-4 border-sky-700 text-lg w-full">
+        OK, Lanjut!
+      </button>
+    </div>
+  </div>
+
+  <!-- ================= FOOTER ================= -->
+  <footer class="bg-white/80 border-t-2 border-sky-200 py-3 px-4 text-center text-xs font-bold text-sky-800 mt-6">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+      <p>© Media Pembelajaran TK AL-ULUM • Belajar 4 Kata Ajaib</p>
+      <p class="text-amber-600"><i class="fa-solid fa-heart text-rose-500"></i> Didesain khusus untuk Anak Usia Dini (4-6 tahun)</p>
+    </div>
+  </footer>
+
+  <!-- ================= JAVASCRIPT LOGIC ================= -->
+  <script>
+    /* ==========================================================================
+       GLOBAL STATE & GENDER CHARACTER SWITCHING
+       ========================================================================== */
+    let selectedGender = 'boy'; // 'boy' or 'girl'
+
+    function setGender(gender) {
+      selectedGender = gender;
+      const btnBoy = document.getElementById('btn-gender-boy');
+      const btnGirl = document.getElementById('btn-gender-girl');
+
+      if (gender === 'boy') {
+        btnBoy.className = "px-2.5 py-1 rounded-xl font-bold text-xs flex items-center gap-1 bg-sky-500 text-white shadow";
+        btnGirl.className = "px-2.5 py-1 rounded-xl font-bold text-xs flex items-center gap-1 text-sky-700 hover:bg-sky-100";
+      } else {
+        btnGirl.className = "px-2.5 py-1 rounded-xl font-bold text-xs flex items-center gap-1 bg-pink-500 text-white shadow";
+        btnBoy.className = "px-2.5 py-1 rounded-xl font-bold text-xs flex items-center gap-1 text-sky-700 hover:bg-sky-100";
+      }
+
+      // Re-render current active screen visuals
+      renderHomeMascot();
+      if (!document.getElementById('menu-mengenal').classList.contains('hidden')) renderMengenal();
+      if (!document.getElementById('menu-menyusun').classList.contains('hidden')) renderMenyusunGame();
+      if (!document.getElementById('menu-simulasi').classList.contains('hidden')) renderSimulasi();
+      if (!document.getElementById('menu-kuis').classList.contains('hidden')) renderKuis();
+    }
+
+    // Dynamic SVG Character Generator for Boy/Girl Poses
+    function getCharacterSvg(poseType) {
+      const isBoy = selectedGender === 'boy';
+      // Colors
+      const clothesColor = isBoy ? '#0284C7' : '#EC4899'; // Sky Blue or Pink
+      const clothesDark = isBoy ? '#0369A1' : '#BE185D';
+      
+      // Headwear: Cap/Hat for Boy, Bow/Hijab for Girl
+      let headwearSvg = '';
+      if (isBoy) {
+        headwearSvg = `<path d="M 75 55 C 75 30, 125 30, 125 55 Z" fill="#F59E0B"/><rect x="65" y="52" width="70" height="8" rx="4" fill="#D97706"/>`;
+      } else {
+        headwearSvg = `<path d="M 70 70 C 65 30, 135 30, 130 70 C 130 90, 70 90, 70 70 Z" fill="#F472B6"/><circle cx="125" cy="40" r="10" fill="#E11D48"/><circle cx="137" cy="48" r="10" fill="#E11D48"/><circle cx="130" cy="44" r="6" fill="#FDE047"/>`;
+      }
+
+      if (poseType === 'smile' || poseType === 'terimakasih') {
+        return `<svg viewBox="0 0 200 200" class="w-full h-full">
+          <ellipse cx="100" cy="180" rx="60" ry="12" fill="#E2E8F0"/>
+          <path d="M 80 175 C 80 105, 120 105, 120 175 Z" fill="${clothesColor}" stroke="${clothesDark}" stroke-width="3"/>
+          <!-- Hands placed together at chest -->
+          <circle cx="100" cy="120" r="12" fill="#FDE047" stroke="${clothesDark}" stroke-width="2"/>
+          <circle cx="100" cy="65" r="24" fill="#FDE047"/>
+          ${headwearSvg}
+          <circle cx="91" cy="65" r="3.5" fill="#1E293B"/>
+          <circle cx="109" cy="65" r="3.5" fill="#1E293B"/>
+          <!-- Happy Smile -->
+          <path d="M 90 73 Q 100 85 110 73" stroke="#B45309" stroke-width="3" stroke-linecap="round" fill="none"/>
+          <circle cx="85" cy="72" r="4" fill="#FCA5A5" opacity="0.6"/>
+          <circle cx="115" cy="72" r="4" fill="#FCA5A5" opacity="0.6"/>
+        </svg>`;
+      } else if (poseType === 'tolong') {
+        return `<svg viewBox="0 0 200 200" class="w-full h-full">
+          <ellipse cx="100" cy="180" rx="60" ry="12" fill="#E2E8F0"/>
+          <path d="M 80 175 C 80 105, 120 105, 120 175 Z" fill="${clothesColor}" stroke="${clothesDark}" stroke-width="3"/>
+          <!-- Raised Hand reaching out -->
+          <path d="M 120 115 L 145 90 L 155 95" stroke="#FDE047" stroke-width="8" stroke-linecap="round" fill="none"/>
+          <circle cx="100" cy="65" r="24" fill="#FDE047"/>
+          ${headwearSvg}
+          <circle cx="91" cy="63" r="3.5" fill="#1E293B"/>
+          <circle cx="109" cy="63" r="3.5" fill="#1E293B"/>
+          <path d="M 94 75 Q 100 70 106 75" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>`;
+      } else if (poseType === 'maaf') {
+        return `<svg viewBox="0 0 200 200" class="w-full h-full">
+          <ellipse cx="100" cy="180" rx="60" ry="12" fill="#E2E8F0"/>
+          <path d="M 80 175 C 80 105, 120 105, 120 175 Z" fill="${clothesColor}" stroke="${clothesDark}" stroke-width="3"/>
+          <!-- Bowed head pose -->
+          <circle cx="100" cy="72" r="24" fill="#FDE047"/>
+          ${headwearSvg}
+          <!-- apologetic eyes -->
+          <path d="M 87 72 Q 92 67 96 72" stroke="#1E293B" stroke-width="2.5" fill="none"/>
+          <path d="M 104 72 Q 108 67 113 72" stroke="#1E293B" stroke-width="2.5" fill="none"/>
+          <path d="M 94 80 Q 100 76 106 80" stroke="#B45309" stroke-width="2" stroke-linecap="round" fill="none"/>
+        </svg>`;
+      } else if (poseType === 'permisi') {
+        return `<svg viewBox="0 0 200 200" class="w-full h-full">
+          <ellipse cx="100" cy="180" rx="60" ry="12" fill="#E2E8F0"/>
+          <!-- Slightly bent walking pose -->
+          <path d="M 75 175 C 75 110, 115 110, 115 175 Z" fill="${clothesColor}" stroke="${clothesDark}" stroke-width="3"/>
+          <path d="M 105 125 L 135 135" stroke="#FDE047" stroke-width="8" stroke-linecap="round"/>
+          <circle cx="95" cy="65" r="24" fill="#FDE047"/>
+          ${headwearSvg}
+          <circle cx="88" cy="65" r="3.5" fill="#1E293B"/>
+          <circle cx="104" cy="65" r="3.5" fill="#1E293B"/>
+          <path d="M 90 73 Q 97 80 105 73" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>`;
+      }
+      return '';
+    }
+
+    /* ==========================================================================
+       DATA SOURCE: 4 KATA AJAIB, SIMULASI, & QUIZ DATA
+       ========================================================================== */
+    const DATA_KATA = [
+      {
+        id: 1,
+        pose: 'maaf',
+        kata: "MAAF",
+        situasi: "Saat kita berbuat kesalahan atau tidak sengaja merusakkan mainan teman.",
+        contoh: '"Maaf ya Budi, aku tidak sengaja menjatuhkan pensilmu."',
+        manfaat: "Membuat hati teman merasa tenang dan menjaga ketertiban serta pertemanan."
+      },
+      {
+        id: 2,
+        pose: 'tolong',
+        kata: "TOLONG",
+        situasi: "Saat kita membutuhkan bantuan orang lain untuk melakukan sesuatu.",
+        contoh: '"Ibu, tolong bantu aku mengambilkan buku di atas meja."',
+        manfaat: "Menunjukkan sikap santun dan menghargai bantuan dari orang lain."
+      },
+      {
+        id: 3,
+        pose: 'terimakasih',
+        kata: "TERIMA KASIH",
+        situasi: "Saat kita diberi hadiah, dipuji, atau dibantu oleh orang lain.",
+        contoh: '"Terima kasih ya Siti, sudah berbagi makanan denganku."',
+        manfaat: "Membuat orang lain merasa bahagia dan dihargai atas kebaikannya."
+      },
+      {
+        id: 4,
+        pose: 'permisi',
+        kata: "PERMISI",
+        situasi: "Saat hendak lewat di depan orang tua/guru, atau saat masuk ruangan.",
+        contoh: '"Permisi Ibu Guru, bolehkah saya lewat ke toilet?"',
+        manfaat: "Bentuk penghormatan dan sopan santun kepada siapapun."
+      }
+    ];
+
+    const DATA_MENYUSUN = [
+      {
+        id: 1,
+        pose: 'tolong',
+        soal: "_____, bisakah bantu saya mengambilkan mainan di atas meja?",
+        jawaban: "TOLONG"
+      },
+      {
+        id: 2,
+        pose: 'terimakasih',
+        soal: "_____ ya Adi, kamu sudah mau meminjamkan pensil warnamu.",
+        jawaban: "TERIMA KASIH"
+      },
+      {
+        id: 3,
+        pose: 'maaf',
+        soal: "_____, aku tidak sengaja menyenggol tempat minummu.",
+        jawaban: "MAAF"
+      },
+      {
+        id: 4,
+        pose: 'permisi',
+        soal: "_____, Ibu Guru, saya ingin berjalan lewat di depan kelas.",
+        jawaban: "PERMISI"
+      }
+    ];
+
+    const DATA_SIMULASI = [
+      {
+        id: 1,
+        pose: 'tolong',
+        title: "Saat Meminta Bantuan Teman",
+        desc: "Ketika membutuhkan bantuan mengambil mainan atau alat tulis, awali selalu dengan kata TOLONG."
+      },
+      {
+        id: 2,
+        pose: 'terimakasih',
+        title: "Saat Menerima Pertolongan",
+        desc: "Setelah teman atau orang tua membantu kita, ucapkan TERIMA KASIH dengan tersenyum ramah."
+      },
+      {
+        id: 3,
+        pose: 'maaf',
+        title: "Saat Berbuat Kesalahan",
+        desc: "Jika tidak sengaja menjatuhkan barang teman, segeralah meminta MAAF dan bantu merapikannya."
+      },
+      {
+        id: 4,
+        pose: 'permisi',
+        title: "Saat Lewat Di Depan Orang Tua",
+        desc: "Bungkukkan sedikit badan dan ucapkan PERMISI saat harus berjalan melewati orang yang lebih tua."
+      }
+    ];
+
+    const DATA_KUIS = [
+      {
+        id: 1,
+        tanya: "Kata apa yang diucapkan saat kita membutuhkan bantuan teman?",
+        opsi: [
+          { nama: "Tolong", benar: true, pose: 'tolong' },
+          { nama: "Maaf", benar: false, pose: 'maaf' },
+          { nama: "Permisi", benar: false, pose: 'permisi' }
+        ]
+      },
+      {
+        id: 2,
+        tanya: "Setelah diberi hadiah oleh Ayah, kita mengucapkan...",
+        opsi: [
+          { nama: "Maaf", benar: false, pose: 'maaf' },
+          { nama: "Terima Kasih", benar: true, pose: 'terimakasih' },
+          { nama: "Tolong", benar: false, pose: 'tolong' }
+        ]
+      },
+      {
+        id: 3,
+        tanya: "Jika tidak sengaja menyenggol mainan teman hingga jatuh, kita mengucapkan...",
+        opsi: [
+          { nama: "Permisi", benar: false, pose: 'permisi' },
+          { nama: "Maaf", benar: true, pose: 'maaf' },
+          { nama: "Terima Kasih", benar: false, pose: 'terimakasih' }
+        ]
+      },
+      {
+        id: 4,
+        tanya: "Saat hendak berjalan di depan Ibu Guru yang sedang duduk, ucapkan...",
+        opsi: [
+          { nama: "Permisi", benar: true, pose: 'permisi' },
+          { nama: "Tolong", benar: false, pose: 'tolong' },
+          { nama: "Maaf", benar: false, pose: 'maaf' }
+        ]
+      },
+      {
+        id: 5,
+        tanya: "Mengapa kita harus mengucapkan Terima Kasih?",
+        opsi: [
+          { nama: "Agar teman merasa dihargai", benar: true, pose: 'terimakasih' },
+          { nama: "Agar mainan cepat habis", benar: false, pose: 'tolong' },
+          { nama: "Agar bisa tidur nyenyak", benar: false, pose: 'smile' }
+        ]
+      },
+      {
+        id: 6,
+        tanya: "Ada berapa jumlah Kata Ajaib yang kita pelajari hari ini?",
+        opsi: [
+          { nama: "2 Kata", benar: false, pose: 'smile' },
+          { nama: "4 Kata", benar: true, pose: 'smile' },
+          { nama: "10 Kata", benar: false, pose: 'smile' }
+        ]
+      },
+      {
+        id: 7,
+        tanya: "Budi ingin meminjam penghapus Ani. Apa yang harus Budi katakan?",
+        opsi: [
+          { nama: "Ani, tolong pinjamkan penghapusmu", benar: true, pose: 'tolong' },
+          { nama: "Ani, maaf penghapusmu jelek", benar: false, pose: 'maaf' },
+          { nama: "Ani, permisi aku lari dulu", benar: false, pose: 'permisi' }
+        ]
+      },
+      {
+        id: 8,
+        tanya: "Ucapkan 'Permisi' dengan posisi badan yang...",
+        opsi: [
+          { nama: "Sopan dan menunduk sedikit", benar: true, pose: 'permisi' },
+          { nama: "Sambil melompat-lompat", benar: false, pose: 'smile' },
+          { nama: "Sambil berteriak kencang", benar: false, pose: 'maaf' }
+        ]
+      },
+      {
+        id: 9,
+        tanya: "Meminta maaf adalah perbuatan yang...",
+        opsi: [
+          { nama: "Terpuji dan Hebat", benar: true, pose: 'maaf' },
+          { nama: "Nakal dan Buruk", benar: false, pose: 'tolong' },
+          { nama: "Penakut", benar: false, pose: 'permisi' }
+        ]
+      },
+      {
+        id: 10,
+        tanya: "Anak yang suka menggunakan 4 Kata Ajaib disukai oleh...",
+        opsi: [
+          { nama: "Orang Tua & Teman-teman", benar: true, pose: 'smile' },
+          { nama: "Tidak ada yang suka", benar: false, pose: 'maaf' },
+          { nama: "Hanya kucing", benar: false, pose: 'tolong' }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       APP STATE VARIABLES
+       ========================================================================== */
+    let globalStars = 0;
+    let currentKataIndex = 0;
+    let currentMenyusunIndex = 0;
+    let selectedMenyusunChoice = null;
+    let currentKuisIndex = 0;
+    let kuisScore = 0;
+    let isBgmPlaying = false;
+    let bgmAudioCtx = null;
+    let simulasiInterval = null;
+    let isSimulasiAuto = false;
+    let currentSimulasiStep = 0;
+
+    /* ==========================================================================
+       AUDIO SYNTHESIZER & SOUND EFFECTS (Web Audio API)
+       ========================================================================== */
+    function createAudioContext() {
+      if (!bgmAudioCtx) {
+        bgmAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (bgmAudioCtx.state === 'suspended') {
+        bgmAudioCtx.resume();
+      }
+    }
+
+    // Sound Effect: Correct / Happy Tone & Applause
+    function playSoundSuccess() {
+      createAudioContext();
+      const now = bgmAudioCtx.currentTime;
+      const osc = bgmAudioCtx.createOscillator();
+      const gain = bgmAudioCtx.createGain();
+      
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(523.25, now); // C5
+      osc.frequency.setValueAtTime(659.25, now + 0.1); // E5
+      osc.frequency.setValueAtTime(783.99, now + 0.2); // G5
+      osc.frequency.setValueAtTime(1046.50, now + 0.3); // C6
+
+      gain.gain.setValueAtTime(0.3, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+
+      osc.connect(gain);
+      gain.connect(bgmAudioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.6);
+    }
+
+    // Sound Effect: Gentle Encouragement (Never harsh)
+    function playSoundTryAgain() {
+      createAudioContext();
+      const now = bgmAudioCtx.currentTime;
+      const osc = bgmAudioCtx.createOscillator();
+      const gain = bgmAudioCtx.createGain();
+
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(400, now);
+      osc.frequency.setValueAtTime(350, now + 0.15);
+
+      gain.gain.setValueAtTime(0.2, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+
+      osc.connect(gain);
+      gain.connect(bgmAudioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.4);
+    }
+
+    // Speech synthesis for instructions & recitations
+    function speakText(text, lang = 'id-ID') {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = lang;
+        utterance.rate = 0.9;
+        utterance.pitch = 1.1;
+        window.speechSynthesis.speak(utterance);
+      }
+    }
+
+    // BGM Audio Loop Synthesizer
+    function toggleBGM() {
+      createAudioContext();
+      const btn = document.getElementById('bgm-toggle');
+      if (isBgmPlaying) {
+        isBgmPlaying = false;
+        btn.classList.remove('bg-amber-300', 'text-amber-900');
+        btn.classList.add('bg-sky-100', 'text-sky-700');
+      } else {
+        isBgmPlaying = true;
+        btn.classList.remove('bg-sky-100', 'text-sky-700');
+        btn.classList.add('bg-amber-300', 'text-amber-900');
+        playBGMNotes();
+      }
+    }
+
+    function playBGMNotes() {
+      if (!isBgmPlaying) return;
+      const notes = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00];
+      const note = notes[Math.floor(Math.random() * notes.length)];
+      const now = bgmAudioCtx.currentTime;
+      
+      const osc = bgmAudioCtx.createOscillator();
+      const gain = bgmAudioCtx.createGain();
+      
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(note, now);
+      
+      gain.gain.setValueAtTime(0.04, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
+      
+      osc.connect(gain);
+      gain.connect(bgmAudioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 1.2);
+
+      setTimeout(playBGMNotes, 1500);
+    }
+
+    /* ==========================================================================
+       ROUTER & NAVIGATION LOGIC
+       ========================================================================== */
+    function showScreen(screenId) {
+      const sections = ['home-screen', 'menu-mengenal', 'menu-menyusun', 'menu-simulasi', 'menu-kuis', 'menu-evaluasi'];
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+
+      const target = document.getElementById(screenId);
+      if (target) {
+        target.classList.remove('hidden');
+        target.classList.add('flex');
+      }
+
+      if (screenId !== 'menu-simulasi' && isSimulasiAuto) {
+        toggleSimulasiAuto();
+      }
+
+      if (screenId === 'home-screen') renderHomeMascot();
+      if (screenId === 'menu-mengenal') renderMengenal();
+      if (screenId === 'menu-menyusun') renderMenyusunGame();
+      if (screenId === 'menu-simulasi') renderSimulasi();
+      if (screenId === 'menu-kuis') renderKuis();
+      if (screenId === 'menu-evaluasi') renderEvaluasi();
+    }
+
+    function renderHomeMascot() {
+      const container = document.getElementById('home-mascot-container');
+      container.innerHTML = getCharacterSvg('smile');
+    }
+
+    function startLearning() {
+      showModal("Halo Anak Pintar!", "Selamat datang di media pembelajaran 4 Kata Ajaib TK AL-ULUM!", "😊");
+      setTimeout(() => {
+        showScreen('menu-mengenal');
+      }, 1200);
+    }
+
+    function addStars(count = 10) {
+      globalStars += count;
+      document.getElementById('global-stars').innerText = globalStars;
+      
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 50,
+          spread: 70,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    /* ==========================================================================
+       1. MENGENAL 4 KATA AJAIB LOGIC
+       ========================================================================== */
+    function renderMengenal() {
+      const item = DATA_KATA[currentKataIndex];
+      document.getElementById('kata-counter').innerText = `${currentKataIndex + 1} / ${DATA_KATA.length}`;
+      document.getElementById('mengenal-svg-holder').innerHTML = getCharacterSvg(item.pose);
+      document.getElementById('mengenal-badge').innerText = item.kata;
+      document.getElementById('mengenal-situasi').innerText = item.situasi;
+      document.getElementById('mengenal-contoh').innerText = item.contoh;
+      document.getElementById('mengenal-manfaat').innerText = item.manfaat;
+
+      speakText(`Kata Ajaib ${item.kata}. ${item.situasi}`);
+    }
+
+    function nextKata() {
+      if (currentKataIndex < DATA_KATA.length - 1) {
+        currentKataIndex++;
+        renderMengenal();
+      } else {
+        showModal("Luar Biasa!", "Kamu sudah mengenal 4 Kata Ajaib! Ayo coba mini game berikutnya!", "🌟");
+        showScreen('menu-menyusun');
+      }
+    }
+
+    function prevKata() {
+      if (currentKataIndex > 0) {
+        currentKataIndex--;
+        renderMengenal();
+      }
+    }
+
+    function playCurrentKataAudio() {
+      const item = DATA_KATA[currentKataIndex];
+      speakText(`Kata Ajaib: ${item.kata}. Kapan diucapkan? ${item.situasi}. Contoh: ${item.contoh}`);
+    }
+
+    /* ==========================================================================
+       2. LENGKAPI KALIMAT LOGIC
+       ========================================================================== */
+    function renderMenyusunGame() {
+      const item = DATA_MENYUSUN[currentMenyusunIndex];
+      document.getElementById('menyusun-svg').innerHTML = getCharacterSvg(item.pose);
+      document.getElementById('menyusun-soal-text').innerText = item.soal;
+      
+      const slot = document.getElementById('menyusun-slot');
+      if (selectedMenyusunChoice) {
+        slot.innerText = selectedMenyusunChoice;
+        slot.className = "w-full max-w-xs border-4 border-solid border-sky-500 bg-sky-200 rounded-2xl py-3 text-sky-950 font-black text-xl flex items-center justify-center min-h-[56px] shadow";
+      } else {
+        slot.innerText = "[ Tekan Kata di Bawah ]";
+        slot.className = "w-full max-w-xs border-4 border-dashed border-amber-400 bg-amber-100 rounded-2xl py-3 text-amber-900 font-black text-xl flex items-center justify-center min-h-[56px]";
+      }
+
+      const optionsContainer = document.getElementById('menyusun-options-container');
+      optionsContainer.innerHTML = '';
+      
+      const allChoices = ["MAAF", "TOLONG", "TERIMA KASIH", "PERMISI"];
+      allChoices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = `btn-kid p-3 rounded-2xl font-black text-lg border-2 shadow ${selectedMenyusunChoice === choice ? 'bg-sky-500 text-white border-sky-700' : 'bg-white text-slate-700 border-sky-200 hover:border-sky-400'}`;
+        btn.innerText = choice;
+        btn.onclick = () => {
+          selectedMenyusunChoice = choice;
+          renderMenyusunGame();
+          playSoundSuccess();
+        };
+        optionsContainer.appendChild(btn);
+      });
+
+      speakText("Lengkapi kalimat ajaib berikut ini ya!");
+    }
+
+    function resetMenyusunGame() {
+      selectedMenyusunChoice = null;
+      renderMenyusunGame();
+    }
+
+    function checkMenyusunAnswer() {
+      if (!selectedMenyusunChoice) {
+        showModal("Pilih Kata Dulu", "Pilih salah satu kata ajaib di bawah ya!", "😊");
+        playSoundTryAgain();
+        return;
+      }
+
+      const currentItem = DATA_MENYUSUN[currentMenyusunIndex];
+      if (selectedMenyusunChoice === currentItem.jawaban) {
+        playSoundSuccess();
+        addStars(15);
+        showModal("Hebat! Jawaban Benar!", `Kata ${currentItem.jawaban} adalah pilihan yang paling tepat! +15 Bintang!`, "🏆");
+        
+        setTimeout(() => {
+          selectedMenyusunChoice = null;
+          currentMenyusunIndex = (currentMenyusunIndex + 1) % DATA_MENYUSUN.length;
+          renderMenyusunGame();
+        }, 1500);
+      } else {
+        playSoundTryAgain();
+        showModal("Ayo Coba Lagi!", "Pikirkan kembali situasi kalimatnya ya!", "🌙");
+      }
+    }
+
+    /* ==========================================================================
+       3. SIMULASI CERITA LOGIC
+       ========================================================================== */
+    function renderSimulasi() {
+      const item = DATA_SIMULASI[currentSimulasiStep];
+      document.getElementById('simulasi-svg').innerHTML = getCharacterSvg(item.pose);
+      document.getElementById('simulasi-title').innerText = item.title;
+      document.getElementById('simulasi-desc').innerText = item.desc;
+      document.getElementById('simulasi-step-badge').innerText = `Skenario ${currentSimulasiStep + 1} dari ${DATA_SIMULASI.length}`;
+      speakText(`${item.title}. ${item.desc}`);
+    }
+
+    function simulasiNext() {
+      currentSimulasiStep = (currentSimulasiStep + 1) % DATA_SIMULASI.length;
+      renderSimulasi();
+    }
+
+    function simulasiPrev() {
+      currentSimulasiStep = (currentSimulasiStep - 1 + DATA_SIMULASI.length) % DATA_SIMULASI.length;
+      renderSimulasi();
+    }
+
+    function toggleSimulasiAuto() {
+      const btnText = document.getElementById('simulasi-play-text');
+      const btnIcon = document.getElementById('simulasi-play-icon');
+
+      if (isSimulasiAuto) {
+        clearInterval(simulasiInterval);
+        isSimulasiAuto = false;
+        btnText.innerText = "Putar Otomatis";
+        btnIcon.className = "fa-solid fa-play";
+      } else {
+        isSimulasiAuto = true;
+        btnText.innerText = "Hentikan";
+        btnIcon.className = "fa-solid fa-pause";
+        simulasiInterval = setInterval(() => {
+          simulasiNext();
+        }, 4000);
+      }
+    }
+
+    /* ==========================================================================
+       4. KUIS KATA AJAIB LOGIC
+       ========================================================================== */
+    function renderKuis() {
+      const q = DATA_KUIS[currentKuisIndex];
+      document.getElementById('kuis-num').innerText = currentKuisIndex + 1;
+      document.getElementById('kuis-stars-count').innerText = kuisScore;
+      document.getElementById('kuis-question-text').innerText = q.tanya;
+
+      const optsContainer = document.getElementById('kuis-options-container');
+      optsContainer.innerHTML = '';
+
+      q.opsi.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.className = "btn-kid bg-sky-50 hover:bg-sky-100 border-4 border-sky-300 p-4 rounded-3xl flex flex-col items-center justify-center text-center shadow-md";
+        btn.innerHTML = `
+          <div class="w-16 h-16 mb-2">${getCharacterSvg(opt.pose)}</div>
+          <span class="text-lg font-black text-sky-950">${opt.nama}</span>
+        `;
+        btn.onclick = () => answerKuis(opt.benar);
+        optsContainer.appendChild(btn);
+      });
+
+      speakText(q.tanya);
+    }
+
+    function answerKuis(isCorrect) {
+      if (isCorrect) {
+        playSoundSuccess();
+        kuisScore += 10;
+        addStars(10);
+        showModal("Jawaban Benar! 🌟", "Kamu pintar sekali! +10 Bintang!", "🎉");
+      } else {
+        playSoundTryAgain();
+        showModal("Hampir Benar! 😊", "Jangan berkecil hati, ayo lanjut ke soal berikutnya!", "💪");
+      }
+
+      setTimeout(() => {
+        if (currentKuisIndex < DATA_KUIS.length - 1) {
+          currentKuisIndex++;
+          renderKuis();
+        } else {
+          showModal("Kuis Selesai! 🏆", `Luar biasa! Kamu berhasil menyelesaikan kuis dengan skor total ${kuisScore}!`, "🎓");
+          showScreen('menu-evaluasi');
+        }
+      }, 1200);
+    }
+
+    /* ==========================================================================
+       5. EVALUASI KEMAMPUAN LOGIC
+       ========================================================================== */
+    function renderEvaluasi() {
+      document.getElementById('eval-total-stars').innerText = globalStars;
+      document.getElementById('eval-quiz-score').innerText = `${kuisScore} / 100`;
+
+      const motivasi = document.getElementById('eval-motivasii');
+      if (globalStars >= 80) {
+        motivasi.innerText = "Subhanallah! Kamu Anak yang Sangat Santun & Cerdas! Guru dan Orang Tua pasti sangat bangga padamu! 🌟💖";
+      } else if (globalStars >= 40) {
+        motivasi.innerText = "Hebat Sekali! Kamu sudah memahami 4 Kata Ajaib dengan sangat baik! Selalu gunakan setiap hari ya! 🌙✨";
+      } else {
+        motivasi.innerText = "Semangat Belajarmu Luar Biasa! Ayo ulangi belajar materi kata ajaib agar makin mahir dan santun! 💪😊";
+      }
+    }
+
+    function resetAllProgress() {
+      globalStars = 0;
+      currentKataIndex = 0;
+      currentMenyusunIndex = 0;
+      selectedMenyusunChoice = null;
+      currentKuisIndex = 0;
+      kuisScore = 0;
+      document.getElementById('global-stars').innerText = '0';
+      showModal("Progress Direset", "Mari belajar dari awal lagi dengan gembira!", "✨");
+      showScreen('home-screen');
+    }
+
+    /* ==========================================================================
+       MODAL CONTROLLER
+       ========================================================================== */
+    function showModal(title, message, icon = "🎉") {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-message').innerText = message;
+      document.getElementById('modal-icon').innerText = icon;
+      document.getElementById('modal-feedback').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-feedback').classList.add('hidden');
+    }
+
+    // Initialize first screen on load
+    window.onload = function() {
+      showScreen('home-screen');
+    };
+  </script>
+</body>
+</html>
